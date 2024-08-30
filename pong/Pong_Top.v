@@ -18,7 +18,9 @@ module Pong_Top
    output reg       o_VSync,
    output [3:0] o_Red_Video,
    output [3:0] o_Grn_Video,
-   output [3:0] o_Blu_Video);
+   output [3:0] o_Blu_Video,
+   output reg [3:0] r_P1_Score,
+   output reg [3:0] r_P2_Score);
  
   // Local Constants to Determine Game Play
   parameter c_GAME_WIDTH  = 40;
@@ -45,8 +47,12 @@ module Pong_Top
   wire       w_Draw_Ball, w_Draw_Any;
   wire [5:0] w_Ball_X, w_Ball_Y;
  
-  reg [3:0] r_P1_Score = 0;
-  reg [3:0] r_P2_Score = 0;
+  //reg [3:0] r_P1_Score = 0;
+  //reg [3:0] r_P2_Score = 0;
+  initial begin
+    r_P1_Score = 3'b000;
+    r_P2_Score = 3'b000;
+  end
  
   // Divided version of the Row/Col Counters
   // Allows us to make the board 40x30

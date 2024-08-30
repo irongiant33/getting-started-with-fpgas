@@ -22,7 +22,23 @@ module Project10_Pong_Top
    output o_VGA_Grn_2,
    output o_VGA_Blu_0,
    output o_VGA_Blu_1,
-   output o_VGA_Blu_2   
+   output o_VGA_Blu_2,   
+
+   // 7 segment displays
+   output o_Segment1_A,
+   output o_Segment1_B,
+   output o_Segment1_C,
+   output o_Segment1_D,
+   output o_Segment1_E,
+   output o_Segment1_F,
+   output o_Segment1_G,
+   output o_Segment2_A,
+   output o_Segment2_B,
+   output o_Segment2_C,
+   output o_Segment2_D,
+   output o_Segment2_E,
+   output o_Segment2_F,
+   output o_Segment2_G
    );
     
   // VGA Constants to set Frame Size
@@ -36,6 +52,9 @@ module Project10_Pong_Top
   wire [c_VIDEO_WIDTH-1:0] w_Red_Video_Pong, w_Red_Video_Porch;
   wire [c_VIDEO_WIDTH-1:0] w_Grn_Video_Pong, w_Grn_Video_Porch;
   wire [c_VIDEO_WIDTH-1:0] w_Blu_Video_Pong, w_Blu_Video_Porch;
+
+  // score signals
+  wire [3:0] p1_score, p2_score;
    
   // 25,000,000 / 115,200 = 217
   UART_RX #(.CLKS_PER_BIT(217)) UART_RX_Inst
@@ -93,7 +112,9 @@ module Project10_Pong_Top
    .o_VSync(w_VSync_Pong),
    .o_Red_Video(w_Red_Video_Pong),
    .o_Grn_Video(w_Grn_Video_Pong),
-   .o_Blu_Video(w_Blu_Video_Pong));
+   .o_Blu_Video(w_Blu_Video_Pong),
+   .r_P1_Score(p1_score),
+   .r_P2_Score(p2_score));
      
   VGA_Sync_Porch  #(.VIDEO_WIDTH(c_VIDEO_WIDTH),
                     .TOTAL_COLS(c_TOTAL_COLS),
@@ -112,6 +133,47 @@ module Project10_Pong_Top
     .o_Red_Video(w_Red_Video_Porch),
     .o_Grn_Video(w_Grn_Video_Porch),
     .o_Blu_Video(w_Blu_Video_Porch));
+
+  // Binary to 7-Segment Converter for Upper Digit
+  Binary_To_7Segment SevenSeg1_Inst
+  (.i_Clk(i_Clk),
+   .i_Binary_Num(p1_score),
+   .o_Segment_A(w_Segment1_A),
+   .o_Segment_B(w_Segment1_B),
+   .o_Segment_C(w_Segment1_C),
+   .o_Segment_D(w_Segment1_D),
+   .o_Segment_E(w_Segment1_E),
+   .o_Segment_F(w_Segment1_F),
+   .o_Segment_G(w_Segment1_G));
+    
+  assign o_Segment1_A = ~w_Segment1_A;
+  assign o_Segment1_B = ~w_Segment1_B;
+  assign o_Segment1_C = ~w_Segment1_C;
+  assign o_Segment1_D = ~w_Segment1_D;
+  assign o_Segment1_E = ~w_Segment1_E;
+  assign o_Segment1_F = ~w_Segment1_F;
+  assign o_Segment1_G = ~w_Segment1_G;
+   
+   
+  // Binary to 7-Segment Converter for Lower Digit
+  Binary_To_7Segment SevenSeg2_Inst
+  (.i_Clk(i_Clk),
+   .i_Binary_Num(p2_score),
+   .o_Segment_A(w_Segment2_A),
+   .o_Segment_B(w_Segment2_B),
+   .o_Segment_C(w_Segment2_C),
+   .o_Segment_D(w_Segment2_D),
+   .o_Segment_E(w_Segment2_E),
+   .o_Segment_F(w_Segment2_F),
+   .o_Segment_G(w_Segment2_G));
+   
+  assign o_Segment2_A = ~w_Segment2_A;
+  assign o_Segment2_B = ~w_Segment2_B;
+  assign o_Segment2_C = ~w_Segment2_C;
+  assign o_Segment2_D = ~w_Segment2_D;
+  assign o_Segment2_E = ~w_Segment2_E;
+  assign o_Segment2_F = ~w_Segment2_F;
+  assign o_Segment2_G = ~w_Segment2_G;
        
   assign o_VGA_Red_0 = w_Red_Video_Porch[0];
   assign o_VGA_Red_1 = w_Red_Video_Porch[1];
